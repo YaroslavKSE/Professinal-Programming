@@ -4,7 +4,7 @@
 swift_version="5.10"
 swift_release="swift-$swift_version-RELEASE"
 ubuntu_version="ubuntu22.04"
-swift_url="https://download.swift.org/swift-$swift_version-release/$ubuntu_version/$swift_release/$swift_release-$ubuntu_version.tar.gz"
+swift_url="https://download.swift.org/swift-5.10-release/ubuntu2204/swift-5.10-RELEASE/swift-5.10-RELEASE-ubuntu22.04.tar.gz"
 swift_install_dir="$HOME/Swift"
 swift_bin_path="$swift_install_dir/$swift_release-$ubuntu_version/usr/bin"
 
