@@ -13,7 +13,7 @@ echo "Installing necessary dependencies..."
 sudo apt-get update
 sudo apt-get install -y clang-18 g++-14 libicu-dev libpython3-dev libtinfo6 libncurses6 libxml2 git cmake ninja-build pkg-config libcurl4-openssl-dev openssl libssl-dev uuid-dev libedit-dev
 
-# Check if the installation was successful
+# Check if the installation was successful 
 if [ $? -ne 0 ]; then
     echo "Failed to install dependencies."
     exit 1
