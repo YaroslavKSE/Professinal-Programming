@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Ignore the bin directory where executables are stored
+bin/
+
