@@ -13,17 +13,17 @@ def test_case_1(program_path):
     
     # Step 2: Run with "Alice"
     output, error = run_program(program_path, "Alice")
-    assert output == "Welcome, Alice!"
+    assert output.strip() == "Welcome, Alice!", f"Expected 'Welcome, Alice!', but got '{output.strip()}'"
     
     # Step 3: Run again with "Alice"
     output, error = run_program(program_path, "Alice")
-    assert output == "Hello again(x2), Alice!"
+    assert output.strip() == "Hello again (x2), Alice!", f"Expected 'Hello again (x2), Alice!', but got '{output.strip()}'"
     print("Test Case 1 Passed")
 
 def test_case_2(program_path):
     # Step 1: Run with "Bob"
     run_program(program_path, "Bob")
-    
+
     # Step 2: Run again with "Bob"
     run_program(program_path, "Bob")
     
@@ -75,11 +75,11 @@ def test_case_5(program_path):
     
     # Step 3: Run again with "Eve"
     output, error = run_program(program_path, "Eve")
-    assert output == "Hello again(x2), Eve!"
+    assert output == "Hello again (x2), Eve!"
     
     # Step 4: Run again with "Frank"
     output, error = run_program(program_path, "Frank")
-    assert output == "Hello again(x2), Frank!"
+    assert output == "Hello again (x2), Frank!"
     print("Test Case 5 Passed")
 
 if __name__ == "__main__":

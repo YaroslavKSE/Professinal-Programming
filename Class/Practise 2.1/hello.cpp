@@ -3,63 +3,90 @@
 #include <string>
 #include <unordered_map>
 #include <print>
+#include <ranges>
+#include <sstream>
 
 using namespace std;
 
 const string FILENAME = "user_stats.txt";
 
-// Function to load user statistics from the file
-unordered_map<string, int> loadUserStats() {
-    unordered_map<string, int> userStats;
-    ifstream file(FILENAME);
+struct UserStat {
+    string name;
+    int count;
 
-    if (file.is_open()) {
-        string name;
-        int count;
-        while (file >> name >> count) {
-            userStats[name] = count;
+    UserStat(const string& name = "", int count = 0) : name(name), count(count) {}
+
+    friend ostream& operator<<(ostream& os, const UserStat& stat) {
+        os << stat.name << " " << stat.count;
+        return os;
+    }
+
+    friend istream& operator>>(istream& is, UserStat& stat) {
+        is >> stat.name >> stat.count;
+        return is;
+    }
+};
+
+class UserStatsManager {
+private:
+    unordered_map<string, UserStat> userStats;
+
+public:
+    UserStatsManager() {
+        loadUserStats();
+    }
+
+    void loadUserStats() {
+        ifstream file(FILENAME);
+
+        if (file.is_open()) {
+            string line;
+            while (getline(file, line)) {
+                istringstream iss(line);
+                UserStat stat;
+                iss >> stat;
+                userStats[stat.name] = stat;
+            }
+            file.close();
         }
-        file.close();
     }
 
-    return userStats;
-}
+    void saveUserStats() const {
+        ofstream file(FILENAME, ios::trunc);
 
-// Function to save user statistics to the file
-void saveUserStats(const unordered_map<string, int>& userStats) {
-    ofstream file(FILENAME, ios::trunc);
-
-    if (file.is_open()) {
-        for (const auto& entry : userStats) {
-            file << entry.first << " " << entry.second << endl;
+        if (file.is_open()) {
+            for (const auto& entry : userStats | views::values) {
+                file << entry << endl;
+            }
+            file.close();
         }
-        file.close();
-    }
-}
-
-// Function to display welcome message and update user statistics
-void greetUser(const string& name, unordered_map<string, int>& userStats) {
-    if (name == "bread") {
-        userStats.clear();
-        println("All user history has been exterminated!");
-        return;
     }
 
-    if (userStats.find(name) == userStats.end()) {
-        println("Welcome, {}!", name);
-        userStats[name] = 1;
-    } else {
-        userStats[name]++;
-        println("Hello again(x{}), {}!", userStats[name], name);
+    void greetUser(const string& name) {
+        if (name == "bread") {
+            userStats.clear();
+            println("All user history has been exterminated!");
+            return;
+        }
+
+        if (userStats.find(name) == userStats.end()) {
+            println("Welcome, {}!", name);
+            userStats[name] = UserStat(name, 1);
+        } else {
+            userStats[name].count++;
+            println("Hello again (x{}), {}!", userStats[name].count, name);
+        }
     }
-}
 
-// Function to reset statistics for a given user
-void resetUserStats(const string& name, unordered_map<string, int>& userStats) {
-    userStats.erase(name);
-    println("Statistics for {} have been reset.", name);
+    void resetUserStats(const string& name) {
+        userStats.erase(name);
+        println("Statistics for {} have been reset.", name);
+    }
 
-}
+    unordered_map<string, UserStat>& getUserStats() {
+        return userStats;
+    }
+};
 
 int main(int argc, char* argv[]) {
     if (argc < 2 || argc > 3) {
@@ -70,15 +97,15 @@ int main(int argc, char* argv[]) {
     string name = argv[1];
     bool deleteStats = (argc == 3 && string(argv[2]) == "delete");
 
-    unordered_map<string, int> userStats = loadUserStats();
+    UserStatsManager manager;
 
     if (deleteStats) {
-        resetUserStats(name, userStats);
+        manager.resetUserStats(name);
     } else {
-        greetUser(name, userStats);
+        manager.greetUser(name);
     }
 
-    saveUserStats(userStats);
+    manager.saveUserStats();
 
     return 0;
 }
