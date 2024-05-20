@@ -8,7 +8,13 @@
 
 using namespace std;
 
-const string FILENAME = "user_stats.txt";
+namespace {
+    constexpr const char* FILENAME = "user_stats.txt";
+    constexpr const char* DELETE_COMMAND = "delete";
+    constexpr const char* CLEAR_HISTORY_COMMAND = "bread";
+    constexpr const char* ALL_HISTORY_CLEARED_MESSAGE = "All user history has been exterminated!";
+    constexpr const char* STATISTICS_RESET_MESSAGE = "Statistics for {} have been reset.";
+}
 
 struct UserStat {
     string name;
@@ -63,9 +69,9 @@ public:
     }
 
     void greetUser(const string& name) {
-        if (name == "bread") {
+        if (name == CLEAR_HISTORY_COMMAND) {
             userStats.clear();
-            println("All user history has been exterminated!");
+            println(ALL_HISTORY_CLEARED_MESSAGE);
             return;
         }
 
@@ -80,7 +86,7 @@ public:
 
     void resetUserStats(const string& name) {
         userStats.erase(name);
-        println("Statistics for {} have been reset.", name);
+        println(STATISTICS_RESET_MESSAGE, name);
     }
 
     unordered_map<string, UserStat>& getUserStats() {
@@ -95,7 +101,7 @@ int main(int argc, char* argv[]) {
     }
 
     string name = argv[1];
-    bool deleteStats = (argc == 3 && string(argv[2]) == "delete");
+    bool deleteStats = (argc == 3 && string(argv[2]) == DELETE_COMMAND);
 
     UserStatsManager manager;
 
