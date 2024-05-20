@@ -6,80 +6,70 @@ def run_program(program_path, *args):
     result = subprocess.run([program_path, *args], capture_output=True, text=True)
     return result.stdout.strip(), result.stderr.strip()
 
-def test_case_1(program_path):
-    # Step 1: Ensure fresh start
+def reset_environment():
     if os.path.exists("user_stats.txt"):
         os.remove("user_stats.txt")
+
+def test_case_1(program_path):
+    reset_environment()
     
-    # Step 2: Run with "Alice"
     output, error = run_program(program_path, "Alice")
-    assert output.strip() == "Welcome, Alice!", f"Expected 'Welcome, Alice!', but got '{output.strip()}'"
+    assert output == "Welcome, Alice!", f"Expected 'Welcome, Alice!', but got '{output}'"
     
-    # Step 3: Run again with "Alice"
     output, error = run_program(program_path, "Alice")
-    assert output.strip() == "Hello again (x2), Alice!", f"Expected 'Hello again (x2), Alice!', but got '{output.strip()}'"
+    assert output == "Hello again (x2), Alice!", f"Expected 'Hello again (x2), Alice!', but got '{output}'"
     print("Test Case 1 Passed")
 
 def test_case_2(program_path):
-    # Step 1: Run with "Bob"
+    reset_environment()
+    
     run_program(program_path, "Bob")
-
-    # Step 2: Run again with "Bob"
     run_program(program_path, "Bob")
     
-    # Step 3: Reset statistics
     output, error = run_program(program_path, "Bob", "delete")
-    assert output == "Statistics for Bob have been reset."
+    assert output == "Statistics for Bob have been reset.", f"Expected 'Statistics for Bob have been reset.', but got '{output}'"
     
-    # Step 4: Run again with "Bob"
     output, error = run_program(program_path, "Bob")
-    assert output == "Welcome, Bob!"
+    assert output == "Welcome, Bob!", f"Expected 'Welcome, Bob!', but got '{output}'"
     print("Test Case 2 Passed")
 
 def test_case_3(program_path):
-    # Step 1: Run with "Charlie"
-    run_program(program_path, "Charlie")
+    reset_environment()
     
-    # Step 2: Run with "Dana"
+    run_program(program_path, "Charlie")
     run_program(program_path, "Dana")
     
-    # Step 3: Clear all history
     output, error = run_program(program_path, "bread")
-    assert output == "All user history has been exterminated!"
+    assert output == "All user history has been exterminated!", f"Expected 'All user history has been exterminated!', but got '{output}'"
     
-    # Step 4: Run again with "Charlie"
     output, error = run_program(program_path, "Charlie")
-    assert output == "Welcome, Charlie!"
+    assert output == "Welcome, Charlie!", f"Expected 'Welcome, Charlie!', but got '{output}'"
     
-    # Step 5: Run again with "Dana"
     output, error = run_program(program_path, "Dana")
-    assert output == "Welcome, Dana!"
+    assert output == "Welcome, Dana!", f"Expected 'Welcome, Dana!', but got '{output}'"
     print("Test Case 3 Passed")
 
 def test_case_4(program_path):
-    # Step 1: Run without arguments
+    reset_environment()
+    
     result = subprocess.run([program_path], capture_output=True, text=True)
     assert "Usage: ./hello <name> [delete]"
     
-    # Step 2: Run with too many arguments
     result = subprocess.run([program_path, "Too", "Many", "Args"], capture_output=True, text=True)
     assert "Usage: ./hello <name> [delete]"
     print("Test Case 4 Passed")
 
 def test_case_5(program_path):
-    # Step 1: Run with "Eve"
-    run_program(program_path, "Eve")
+    reset_environment()
     
-    # Step 2: Run with "Frank"
+    run_program(program_path, "Eve")
     run_program(program_path, "Frank")
     
-    # Step 3: Run again with "Eve"
     output, error = run_program(program_path, "Eve")
-    assert output == "Hello again (x2), Eve!"
+    assert output == "Hello again (x2), Eve!", f"Expected 'Hello again (x2), Eve!', but got '{output}'"
     
-    # Step 4: Run again with "Frank"
     output, error = run_program(program_path, "Frank")
-    assert output == "Hello again (x2), Frank!"
+    assert output == "Hello again (x2), Frank!", f"Expected 'Hello again (x2), Frank!', but got '{output}'"
     print("Test Case 5 Passed")
 
 if __name__ == "__main__":
@@ -98,3 +88,5 @@ if __name__ == "__main__":
     test_case_3(program_path)
     test_case_4(program_path)
     test_case_5(program_path)
+    
+    reset_environment()
