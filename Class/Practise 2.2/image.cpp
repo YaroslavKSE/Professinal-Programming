@@ -60,11 +60,11 @@ void applyFavoriteColor(Image& image, const Color& favoriteColor) {
             if (image[i][j] == favoriteColor) {
                 if (i > 0) {
                     image[i - 1][j] = favoriteColor; // top pixel
-                    std::println("Changed the top pixel with index {}, {}", i, j);
+                     // std::println("Changed the top pixel with index {}, {}", i, j);
                 }
                 if (j > 0) {
                     image[i][j - 1] = favoriteColor; // left pixel
-                    std::println("Changed the left pixel with index {}, {}", i, j);
+                     // std::println("Changed the left pixel with index {}, {}", i, j);
                 }
             }
         }
@@ -79,6 +79,9 @@ int main() {
     std::cin >> inputFilename;
 
     std::println("Enter your favorite color (r g b): ");
+    // std::println("For red, enter 255 0 0");
+    // std::println("For green, enter 0 255 0");
+    // std::println("For blue, enter 0 0 255");
     std::cin >> favoriteColor.r >> favoriteColor.g >> favoriteColor.b;
 
     std::println("Enter output file name: ");
