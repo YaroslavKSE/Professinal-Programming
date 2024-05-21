@@ -42,7 +42,7 @@ def run_test(executable, input_file, favorite_color, expected_output_file, actua
         
         return result
 
-def test_case_1(executable):
+def Grey_Pixels_Processing_Complete_Successfully(executable):
     input_file = os.path.join("images", "test_input_1.txt")
     favorite_color = "32 32 32" # Grey
     expected_output_file = os.path.join("images", "expected_output_1.txt")
@@ -57,7 +57,7 @@ def test_case_1(executable):
     print("Running test case 1")
     assert run_test(executable, input_file, favorite_color, expected_output_file, actual_output_file, expected_console_output), "Test case 1 failed"
 
-def test_case_2(executable):
+def Red_Pixels_Processing_Complete_Successfully(executable):
     input_file = os.path.join("images", "test_input_2.txt")
     favorite_color = "255 0 0" # Red
     expected_output_file = os.path.join("images", "expected_output_2.txt")
@@ -72,7 +72,7 @@ def test_case_2(executable):
     print("Running test case 2")
     assert run_test(executable, input_file, favorite_color, expected_output_file, actual_output_file, expected_console_output), "Test case 2 failed"
 
-def test_case_3(executable):
+def Blue_Pixels_On_Border_Line_Processing_Complete_Successfully(executable):
     input_file = os.path.join("images", "test_input_3.txt")
     favorite_color = "0 0 255" # Blue
     expected_output_file = os.path.join("images", "expected_output_3.txt")
@@ -87,7 +87,7 @@ def test_case_3(executable):
     print("Running test case 3")
     assert run_test(executable, input_file, favorite_color, expected_output_file, actual_output_file, expected_console_output), "Test case 3 failed"
 
-def test_case_4(executable):
+def Invalid_Image_Format_Returns_Error_Message(executable):
     input_file = os.path.join("images", "test_input_4.txt")
     favorite_color = "255 255 0"
     expected_console_output = (
@@ -102,14 +102,14 @@ def test_case_4(executable):
     # Expect this to fail due to invalid format 
     assert run_test(executable, input_file, favorite_color, "", "", expected_console_output, expect_fail=True), "Test case 4 did not fail as expected"
 
-def test_case_5(executable):
+def Invalid_Pixel_Format_Returns_Error_Message(executable):
     input_file = os.path.join("images", "test_input_5.txt")
     favorite_color = "255 0 0"
     expected_console_output = (
         "Enter input file name: \n"
         "Enter your favorite color (r g b): \n"
         "Enter output file name: \n"
-        f"Invalid input format at line 1, pixel 1."
+        f"Invalid input pixel format in row."
     )
 
     print("Running test case 5")
@@ -118,11 +118,11 @@ def test_case_5(executable):
     assert run_test(executable, input_file, favorite_color, "", "", expected_console_output, expect_fail=True), "Test case 5 did not fail as expected"
 
 def main(executable):
-    test_case_1(executable)
-    test_case_2(executable)
-    test_case_3(executable)
-    test_case_4(executable)
-    test_case_5(executable)
+    Grey_Pixels_Processing_Complete_Successfully(executable)
+    Red_Pixels_Processing_Complete_Successfully(executable)
+    Blue_Pixels_On_Border_Line_Processing_Complete_Successfully(executable)
+    Invalid_Image_Format_Returns_Error_Message(executable)
+    Invalid_Pixel_Format_Returns_Error_Message(executable)
     print("All tests passed.")
 
 if __name__ == "__main__":
