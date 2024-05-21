@@ -6,6 +6,12 @@
 #include <tuple>
 #include <ranges>
 #include <print>
+#include <ranges>
+#include <string_view>
+
+namespace {
+    constexpr int IMAGE_SIZE = 16;
+}
 
 struct Color {
     int r, g, b;
@@ -13,9 +19,23 @@ struct Color {
     bool operator==(const Color& other) const {
         return r == other.r && g == other.g && b == other.b;
     }
+
+    bool isValid() const {
+        return (r >= 0 && r <= 255) && (g >= 0 && g <= 255) && (b >= 0 && b <= 255);
+    }
 };
 
-using Image = std::array<std::array<Color, 16>, 16>;
+using Image = std::array<std::array<Color, IMAGE_SIZE>, IMAGE_SIZE>;
+
+bool readRow(std::istringstream& lineStream, std::array<Color, IMAGE_SIZE>& row) {
+    for (auto& pixel : row) {
+        char delimiter;
+        if (!(lineStream >> pixel.r >> delimiter >> pixel.g >> delimiter >> pixel.b) || delimiter != ',') {
+            return false;
+        }
+    }
+    return true;
+}
 
 bool readImage(const std::string& inputFilename, Image& image) {
     std::ifstream file(inputFilename);
@@ -25,19 +45,16 @@ bool readImage(const std::string& inputFilename, Image& image) {
     }
 
     std::string line;
-    for (int i = 0; i < 16; ++i) {
+    for (auto& row : image) {
         if (!std::getline(file, line)) {
             std::println("Invalid input format: not enough lines.");
             return false;
         }
 
         std::istringstream lineStream(line);
-        for (int j = 0; j < 16; ++j) {
-            char delimiter;
-            if (!(lineStream >> image[i][j].r >> delimiter >> image[i][j].g >> delimiter >> image[i][j].b) || delimiter != ',') {
-                std::println("Invalid input format at line {}, pixel {}.", i + 1, j + 1);
-                return false;
-            }
+        if (!readRow(lineStream, row)) {
+            std::println("Invalid input pixel format in row.");
+            return false;
         }
     }
 
@@ -55,16 +72,14 @@ void writeImage(const std::string& outputFilename, const Image& image) {
 }
 
 void applyFavoriteColor(Image& image, const Color& favoriteColor) {
-    for (int i = 0; i < 16; ++i) {
-        for (int j = 0; j < 16; ++j) {
+    for (int i = 0; i < IMAGE_SIZE; ++i) {
+        for (int j = 0; j < IMAGE_SIZE; ++j) {
             if (image[i][j] == favoriteColor) {
                 if (i > 0) {
                     image[i - 1][j] = favoriteColor; // top pixel
-                     // std::println("Changed the top pixel with index {}, {}", i, j);
                 }
                 if (j > 0) {
                     image[i][j - 1] = favoriteColor; // left pixel
-                     // std::println("Changed the left pixel with index {}, {}", i, j);
                 }
             }
         }
@@ -79,10 +94,12 @@ int main() {
     std::cin >> inputFilename;
 
     std::println("Enter your favorite color (r g b): ");
-    // std::println("For red, enter 255 0 0");
-    // std::println("For green, enter 0 255 0");
-    // std::println("For blue, enter 0 0 255");
     std::cin >> favoriteColor.r >> favoriteColor.g >> favoriteColor.b;
+
+    if (!favoriteColor.isValid()) {
+        std::println("Invalid color input. Each component should be between 0 and 255.");
+        return 1;
+    }
 
     std::println("Enter output file name: ");
     std::cin >> outputFilename;
