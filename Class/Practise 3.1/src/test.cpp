@@ -5,76 +5,99 @@
 int main() {
     UnitTests testSuite;
 
-    testSuite.addTest("ZeroInputValueReturnsZero",
-    [](){
-        // Build:
+    // Tests for dummyFunc
+    testSuite.addTest("Dummy_test1", []() {
+        // Arrange
         double value = 0.0;
-    
-        // Operate:
+
+        // Act
         auto result = dummyFunc(value);
 
-        // Check:
+        // Assert
         ASSERT_EQ(result, 0.0);
     });
 
-    testSuite.addTest("PositiveValueInputReturnsPositiveValue",
-    [](){
-        // Build:
+    testSuite.addTest("Dummy_test2", []() {
+        // Arrange
         double value = 5.0;
-    
-        // Operate:
+
+        // Act
         auto result = dummyFunc(value);
 
-        // Check:
+        // Assert
         ASSERT_EQ(result, 5.0);
     });
 
-    testSuite.addTest("NegativeValueInputReturnsZero",
-    [](){
-        // Build:
+    testSuite.addTest("Dummy_test3", []() {
+        // Arrange
         double value = -3.0;
-    
-        // Operate:
+
+        // Act
         auto result = dummyFunc(value);
 
-        // Check:
+        // Assert
         ASSERT_EQ(result, 0.0);
     });
 
-     // Tests for repeatString
+    // Tests for repeatString
     testSuite.addTest("RepeatStringPrints_home_Twice", []() {
+        // Arrange
         std::vector<int> vec = {0, 2, 1};
         std::string str = "home";
+
+        // Act
         auto result = repeatString(vec, str);
+
+        // Assert
         ASSERT_EQ(result, "homehome");
     });
 
-    testSuite.addTest("RepeatStringDoNotPrint_test", []() {
-        std::vector<int> vec = {0, 0, 0};
+    testSuite.addTest("RepeatString_EmptyVector", []() {
+        // Arrange
+        std::vector<int> vec = {};
         std::string str = "test";
+
+        // Act
         auto result = repeatString(vec, str);
+
+        // Assert
         ASSERT_EQ(result, "");
     });
 
-    testSuite.addTest("RepeatStringPrints_a_Once", []() {
+    testSuite.addTest("RepeatString_EmptyString", []() {
+        // Arrange
+        std::vector<int> vec = {1, 2, 3};
+        std::string str = "";
+
+        // Act
+        auto result = repeatString(vec, str);
+
+        // Assert
+        ASSERT_EQ(result, "");
+    });
+
+    testSuite.addTest("RepeatString_PrintOnce", []() {
+        // Arrange
         std::vector<int> vec = {1, 1, 1};
         std::string str = "a";
+
+        // Act
         auto result = repeatString(vec, str);
+
+        // Assert
         ASSERT_EQ(result, "a");
     });
 
-    testSuite.addTest("RepeatStringPrints_xyz_FiveTimes", []() {
+    testSuite.addTest("RepeatString_PrintFiveTimes", []() {
+        // Arrange
         std::vector<int> vec = {5, 3, 4};
         std::string str = "xyz";
-        auto result = repeatString(vec, str);
-        ASSERT_EQ(result, "xyzxyzxyzxyzxyz");
-    });
 
-    testSuite.addTest("RepeatStringPrints_123_ThreeTimes", []() {
-        std::vector<int> vec = {-1, 2, 2, 2};
-        std::string str = "123";
+        // Act
         auto result = repeatString(vec, str);
-        ASSERT_EQ(result, "123123");
+
+        // Assert
+        ASSERT_EQ(result, "xyzxyzxyzxyzxyz");
     });
 
     testSuite.run();
