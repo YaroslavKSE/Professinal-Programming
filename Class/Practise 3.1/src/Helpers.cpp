@@ -7,13 +7,8 @@ double dummyFunc(double x) {
 }
 
 std::string repeatString(const std::vector<int>& vec, const std::string& str) {
-    if (vec.empty()) {
-        return "";
-    }
-    int maxVal = *std::max_element(vec.begin(), vec.end());
-    std::string result;
-    for (int i = 0; i < maxVal; ++i) {
-        result += str;
-    }
-    return result;
+    auto repeatCount = vec.empty() ? 0 : std::ranges::max(vec);
+    return repeatCount > 0
+        ? std::views::repeat(str) | std::views::take(repeatCount) | std::views::join | std::ranges::to<std::string>()
+        : "";
 }
