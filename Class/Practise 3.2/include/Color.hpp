@@ -3,7 +3,7 @@
 class Color {
 public:
     Color(int r, int g, int b);
-    Color magicColor() const;
+    [[nodiscard]] Color generateMagicColor() const;
 
     int getR() const;
     int getG() const;

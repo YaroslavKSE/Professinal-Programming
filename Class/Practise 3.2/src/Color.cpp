@@ -1,16 +1,15 @@
 #include "Color.hpp"
-#include <cmath>
+#include <algorithm>
 
-Color::Color(int r, int g, int b) : r(r), g(g), b(b) {}
+Color::Color(int r, int g, int b) 
+    : r(std::clamp(r, 0, 255)), 
+      g(std::clamp(g, 0, 255)), 
+      b(std::clamp(b, 0, 255)) {}
 
-Color Color::magicColor() const {
-    int newR = (r / 2) - 1;
-    int newG = (g * 2) - 2;
+Color Color::generateMagicColor() const {
+    int newR = std::clamp((r / 2) - 1, 0, 255);
+    int newG = std::clamp((g * 2) - 2, 0, 255);
     int newB = b;
-
-    // Ensure the values are within the range [0, 255]
-    newR = std::max(0, std::min(255, newR));
-    newG = std::max(0, std::min(255, newG));
 
     return Color(newR, newG, newB);
 }
