@@ -4,85 +4,111 @@ class TriangleTests: XCTestCase {
     
     private let doubleAccuracy = 1e-9
     
-    func testArea_WithSidesThreeFourFive_ReturnsSix() {
+    func testCalculateArea_CorrectlyCalculatesArea_RightAngledTriangle() {
         // Arrange
-        let triangle = Triangle(a: 3, b: 4, c: 5)
+        let triangle = try! Triangle(a: 3, b: 4, c: 5)
         
         // Act
-        let result = triangle.area()
+        let result = triangle.calculateArea()
         
         // Assert
         XCTAssertEqual(result, 6.0, accuracy: doubleAccuracy)
     }
     
-    func testArea_WithSidesSixEightTen_ReturnsTwentyFour() {
+    func testCalculateArea_CorrectlyCalculatesArea_EquilateralTriangle() {
         // Arrange
-        let triangle = Triangle(a: 6, b: 8, c: 10)
+        let triangle = try! Triangle(a: 5, b: 5, c: 5)
         
         // Act
-        let result = triangle.area()
+        let result = triangle.calculateArea()
         
         // Assert
-        XCTAssertEqual(result, 24.0, accuracy: doubleAccuracy)
+        let expectedArea = (sqrt(3) / 4) * 25 // (sqrt(3) / 4) * a^2
+        XCTAssertEqual(result, expectedArea, accuracy: doubleAccuracy)
     }
     
-    func testArea_WithSidesFiveTwelveThirteen_ReturnsThirty() {
+    func testCalculateArea_CorrectlyCalculatesArea_IsoscelesTriangle() {
         // Arrange
-        let triangle = Triangle(a: 5, b: 12, c: 13)
+        let triangle = try! Triangle(a: 5, b: 5, c: 8)
         
         // Act
-        let result = triangle.area()
+        let result = triangle.calculateArea()
         
         // Assert
-        XCTAssertEqual(result, 30.0, accuracy: doubleAccuracy)
+        let s = (5 + 5 + 8) / 2.0
+        let expectedArea = sqrt(s * (s - 5) * (s - 5) * (s - 8))
+        XCTAssertEqual(result, expectedArea, accuracy: doubleAccuracy)
     }
     
-    func testHeight_ForSideA_ReturnsCorrectHeight() {
+    func testCalculateArea_CorrectlyCalculatesArea_ScaleneTriangle() {
         // Arrange
-        let triangle = Triangle(a: 3, b: 4, c: 5)
+        let triangle = try! Triangle(a: 7, b: 10, c: 5)
         
         // Act
-        let result = triangle.height(for: "a")
+        let result = triangle.calculateArea()
         
         // Assert
-        XCTAssertNotNil(result)
-        XCTAssertEqual(result!, 4.0, accuracy: doubleAccuracy)
+        let s = (7 + 10 + 5) / 2.0
+        let expectedArea = sqrt(s * (s - 7) * (s - 10) * (s - 5))
+        XCTAssertEqual(result, expectedArea, accuracy: doubleAccuracy)
     }
     
-    func testHeight_ForSideB_ReturnsCorrectHeight() {
-        // Arrange
-        let triangle = Triangle(a: 6, b: 8, c: 10)
+    func testCalculateArea_ThrowsError_InvalidSides() {
+        // Arrange & Act & Assert
+        XCTAssertThrowsError(try Triangle(a: -5, b: 8, c: 10)) { error in
+            XCTAssertEqual(error as? TriangleError, TriangleError.invalidSides("Sides must be positive numbers."))
+        }
         
-        // Act
-        let result = triangle.height(for: "b")
-        
-        // Assert
-        XCTAssertNotNil(result)
-        XCTAssertEqual(result!, 6.0, accuracy: doubleAccuracy)
+        XCTAssertThrowsError(try Triangle(a: 1, b: 2, c: 10)) { error in
+            XCTAssertEqual(error as? TriangleError, TriangleError.invalidSides("The given sides do not form a valid triangle."))
+        }
     }
     
-    func testHeight_ForSideC_ReturnsCorrectHeight() {
+    func testHeightForSide_CorrectlyCalculatesHeight_ValidSideA() {
         // Arrange
-        let triangle = Triangle(a: 5, b: 12, c: 13)
+        let triangle = try! Triangle(a: 3, b: 4, c: 5)
         
         // Act
-        let result = triangle.height(for: "c")
+        let result = triangle.height(for: .a)
         
         // Assert
-        XCTAssertNotNil(result)
-        XCTAssertEqual(result!, 4.615384615384615, accuracy: doubleAccuracy) 
+        XCTAssertEqual(result, 4.0, accuracy: doubleAccuracy)
     }
+
+    func testHeightForSide_CorrectlyCalculatesHeight_ValidSideB() {
+        // Arrange
+        let triangle = try! Triangle(a: 6, b: 8, c: 10)
+        
+        // Act
+        let result = triangle.height(for: .b)
+        
+        // Assert
+        XCTAssertEqual(result, 6.0, accuracy: doubleAccuracy)
+    }
+    
+    func testHeightForSide_CorrectlyCalculatesHeight_ValidSideC() {
+        // Arrange
+        let triangle = try! Triangle(a: 5, b: 12, c: 13)
+        
+        // Act
+        let result = triangle.height(for: .c)
+        
+        // Assert
+        XCTAssertEqual(result, 4.615384615384615, accuracy: doubleAccuracy) 
+    }   
 }
 
 #if os(Linux)
 extension TriangleTests {
     static var allTests = [
-        ("testArea_WithSidesThreeFourFive_ReturnsSix", testArea_WithSidesThreeFourFive_ReturnsSix),
-        ("testArea_WithSidesSixEightTen_ReturnsTwentyFour", testArea_WithSidesSixEightTen_ReturnsTwentyFour),
-        ("testArea_WithSidesFiveTwelveThirteen_ReturnsThirty", testArea_WithSidesFiveTwelveThirteen_ReturnsThirty),
-        ("testHeight_ForSideA_ReturnsCorrectHeight", testHeight_ForSideA_ReturnsCorrectHeight),
-        ("testHeight_ForSideB_ReturnsCorrectHeight", testHeight_ForSideB_ReturnsCorrectHeight),
-        ("testHeight_ForSideC_ReturnsCorrectHeight", testHeight_ForSideC_ReturnsCorrectHeight),
+        ("testCalculateArea_CorrectlyCalculatesArea_RightAngledTriangle", testCalculateArea_CorrectlyCalculatesArea_RightAngledTriangle),
+        ("testCalculateArea_CorrectlyCalculatesArea_EquilateralTriangle", testCalculateArea_CorrectlyCalculatesArea_EquilateralTriangle),
+        ("testCalculateArea_CorrectlyCalculatesArea_IsoscelesTriangle", testCalculateArea_CorrectlyCalculatesArea_IsoscelesTriangle),
+        ("testCalculateArea_CorrectlyCalculatesArea_ScaleneTriangle", testCalculateArea_CorrectlyCalculatesArea_ScaleneTriangle),
+        ("testCalculateArea_ThrowsError_InvalidSides", testCalculateArea_ThrowsError_InvalidSides),
+        ("testHeightForSide_CorrectlyCalculatesHeight_ValidSideA", testHeightForSide_CorrectlyCalculatesHeight_ValidSideA),
+        ("testHeightForSide_CorrectlyCalculatesHeight_ValidSideB", testHeightForSide_CorrectlyCalculatesHeight_ValidSideB),
+        ("testHeightForSide_CorrectlyCalculatesHeight_ValidSideC", testHeightForSide_CorrectlyCalculatesHeight_ValidSideC),
     ]
 }
 #endif
