@@ -23,7 +23,7 @@ class TriangleTests: XCTestCase {
         let result = triangle.calculateArea()
         
         // Assert
-        let expectedArea = (sqrt(3) / 4) * 25 // (sqrt(3) / 4) * a^2
+        let expectedArea = 10.8253175473
         XCTAssertEqual(result, expectedArea, accuracy: doubleAccuracy)
     }
     
@@ -35,8 +35,7 @@ class TriangleTests: XCTestCase {
         let result = triangle.calculateArea()
         
         // Assert
-        let s = (5 + 5 + 8) / 2.0
-        let expectedArea = sqrt(s * (s - 5) * (s - 5) * (s - 8))
+        let expectedArea = 12.0
         XCTAssertEqual(result, expectedArea, accuracy: doubleAccuracy)
     }
     
@@ -48,8 +47,7 @@ class TriangleTests: XCTestCase {
         let result = triangle.calculateArea()
         
         // Assert
-        let s = (7 + 10 + 5) / 2.0
-        let expectedArea = sqrt(s * (s - 7) * (s - 10) * (s - 5))
+        let expectedArea = 16.2480768093
         XCTAssertEqual(result, expectedArea, accuracy: doubleAccuracy)
     }
     
