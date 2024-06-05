@@ -28,9 +28,8 @@ int main() {
         }
     }
 
-    Pizza* pizza = builder.getProduct();
+    std::unique_ptr<Pizza> pizza = builder.getProduct();
     pizza->printPizza();
-    delete pizza;
 
     return 0;
 }

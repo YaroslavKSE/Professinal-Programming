@@ -1,24 +1,22 @@
-#ifndef PIZZABUILDER_H
-#define PIZZABUILDER_H
+#pragma once
 
 #include "Pizza.h"
 #include "IngredientsReader.h"
 #include <unordered_map>
 #include <string>
+#include <memory>
 
 class PizzaBuilder {
 public:
     PizzaBuilder(const IngredientsReader& reader, const std::string& filename);
     void showIngredients() const;
     void addIngredientToPizza(const std::string& ingredientName);
-    Pizza* getProduct();
+    [[nodiscard]] std::unique_ptr<Pizza> getProduct();
     void reset();
 
-    std::unordered_map<std::string, Ingredient> getAvailableIngredients() const;
+    [[nodiscard]] std::unordered_map<std::string, Ingredient> getAvailableIngredients() const;
 
 private:
-    Pizza* pizza;
+    std::unique_ptr<Pizza> pizza;
     std::unordered_map<std::string, Ingredient> availableIngredients;
 };
-
-#endif // PIZZABUILDER_H

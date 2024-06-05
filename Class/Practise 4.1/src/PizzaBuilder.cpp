@@ -22,14 +22,14 @@ void PizzaBuilder::addIngredientToPizza(const std::string& ingredientName) {
     }
 }
 
-Pizza* PizzaBuilder::getProduct() {
-    Pizza* result = this->pizza;
+std::unique_ptr<Pizza> PizzaBuilder::getProduct() {
+    auto result = std::move(pizza);
     this->reset();
     return result;
 }
 
 void PizzaBuilder::reset() {
-    this->pizza = new Pizza();
+    this->pizza = std::make_unique<Pizza>();
 }
 
 std::unordered_map<std::string, Ingredient> PizzaBuilder::getAvailableIngredients() const {

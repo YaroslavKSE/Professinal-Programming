@@ -1,5 +1,4 @@
-#ifndef INGREDIENT_H
-#define INGREDIENT_H
+#pragma once
 
 #include <string>
 
@@ -14,5 +13,3 @@ private:
     std::string name;
     double cost;
 };
-
-#endif // INGREDIENT_H

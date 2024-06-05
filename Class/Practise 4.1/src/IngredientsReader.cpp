@@ -1,17 +1,14 @@
 #include "IngredientsReader.h"
+#include <print>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 
-std::unordered_map<std::string, Ingredient> IngredientsReader::readIngredients(const std::string& filename) const {
-    return parseFile(filename);
-}
-
-std::unordered_map<std::string, Ingredient> IngredientsReader::parseFile(const std::string& filename) const {
+std::unordered_map<std::string, Ingredient> IngredientsReader::readIngredients(const std::string& filename) {
     std::unordered_map<std::string, Ingredient> ingredients;
     std::ifstream file(filename);
     if (!file) {
-        std::cerr << "Unable to open file: " << filename << std::endl;
+        std::println(stderr, "Unable to open file: {}", filename);
         return ingredients;
     }
 
@@ -23,7 +20,7 @@ std::unordered_map<std::string, Ingredient> IngredientsReader::parseFile(const s
         if (iss >> name >> cost) {
             ingredients[name] = Ingredient(name, cost);
         } else {
-            std::cerr << "Invalid line format: " << line << std::endl;
+            std::println(stderr, "Invalid line format: {}", line);
         }
     }
     return ingredients;

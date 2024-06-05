@@ -1,5 +1,4 @@
-#ifndef INGREDIENTSREADER_H
-#define INGREDIENTSREADER_H
+#pragma once
 
 #include "Ingredient.h"
 #include <unordered_map>
@@ -7,10 +6,5 @@
 
 class IngredientsReader {
 public:
-    std::unordered_map<std::string, Ingredient> readIngredients(const std::string& filename) const;
-
-private:
-    std::unordered_map<std::string, Ingredient> parseFile(const std::string& filename) const;
+    static std::unordered_map<std::string, Ingredient> readIngredients(const std::string& filename);
 };
-
-#endif // INGREDIENTSREADER_H

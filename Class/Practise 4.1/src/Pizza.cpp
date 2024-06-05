@@ -1,6 +1,7 @@
 #include "Pizza.h"
-#include <iostream>
 #include <print>
+#include <iostream>
+#include <numeric>
 
 void Pizza::addIngredient(const Ingredient& ingredient) {
     ingredients.push_back(ingredient);
@@ -21,9 +22,7 @@ std::vector<Ingredient> Pizza::getIngredients() const {
 }
 
 double Pizza::getTotalCost() const {
-    double totalCost = 0;
-    for (const auto& ingredient : ingredients) {
-        totalCost += ingredient.getCost();
-    }
-    return totalCost;
+    return std::accumulate(ingredients.begin(), ingredients.end(), 0.0, [](double sum, const Ingredient& ingredient) {
+        return sum + ingredient.getCost();
+    });
 }
