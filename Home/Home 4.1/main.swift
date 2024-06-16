@@ -30,37 +30,46 @@ func createDefaultPizza(_ type: DefaultPizzas, builder: PizzaBuilder) {
     }
 }
 
+func handleClassicalOption(builder: PizzaBuilder) {
+    print("Choose a classical pizza: Margherita, Pepperoni, Vegetarian")
+    if let pizzaType = readLine(), let defaultPizza = DefaultPizzas(rawValue: pizzaType) {
+        createDefaultPizza(defaultPizza, builder: builder)
+        let pizza = builder.getProduct()
+        pizza.printPizza()
+    } else {
+        print("Invalid choice.")
+    }
+}
+
+func handleCustomOption(builder: PizzaBuilder) {
+    while true {
+        print("Enter an ingredient (or 'done' to finish, 'list' to show ingredients): ")
+        if let input = readLine() {
+            if input.lowercased() == Commands.doneCommand {
+                break
+            } else if input.lowercased() == Commands.listCommand {
+                builder.showIngredients()
+            } else {
+                builder.addIngredientToPizza(input)
+            }
+        }
+    }
+    let pizza = builder.getProduct()
+    pizza.printPizza()
+}
+
 func main() {
     let reader = IngredientsReader()
     let builder = PizzaBuilder(reader: reader, filename: Commands.ingredientsFile)
 
     print("Do you want to choose a classical pizza or compose a custom one? (classical/custom)")
     if let choice = readLine() {
-        if choice.lowercased() == Commands.classicalOption {
-            print("Choose a classical pizza: Margherita, Pepperoni, Vegetarian")
-            if let pizzaType = readLine(), let defaultPizza = DefaultPizzas(rawValue: pizzaType) {
-                createDefaultPizza(defaultPizza, builder: builder)
-                let pizza = builder.getProduct()
-                pizza.printPizza()
-            } else {
-                print("Invalid choice.")
-            }
-        } else if choice.lowercased() == Commands.customOption {
-            while true {
-                print("Enter an ingredient (or 'done' to finish, 'list' to show ingredients): ")
-                if let input = readLine() {
-                    if input.lowercased() == Commands.doneCommand {
-                        break
-                    } else if input.lowercased() == Commands.listCommand {
-                        builder.showIngredients()
-                    } else {
-                        builder.addIngredientToPizza(input)
-                    }
-                }
-            }
-            let pizza = builder.getProduct()
-            pizza.printPizza()
-        } else {
+        switch choice.lowercased() {
+        case Commands.classicalOption:
+            handleClassicalOption(builder: builder)
+        case Commands.customOption:
+            handleCustomOption(builder: builder)
+        default:
             print("Invalid choice.")
         }
     }
