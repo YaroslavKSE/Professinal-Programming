@@ -1,5 +1,6 @@
 #include "MegaDataPool.hpp"
 #include <stdexcept>
+#include <algorithm>
 
 MegaDataPool::MegaDataPool(size_t poolSize)
     : poolSize(poolSize), pool(poolSize), used(poolSize, false) {
@@ -9,6 +10,7 @@ MegaDataPool::MegaDataPool(size_t poolSize)
 }
 
 std::shared_ptr<MegaData> MegaDataPool::acquire() {
+    std::lock_guard<std::mutex> lock(poolMutex);
     for (size_t i = 0; i < poolSize; ++i) {
         if (!used[i]) {
             used[i] = true;
@@ -20,6 +22,7 @@ std::shared_ptr<MegaData> MegaDataPool::acquire() {
 }
 
 void MegaDataPool::release(size_t index) {
+    std::lock_guard<std::mutex> lock(poolMutex);
     if (index >= poolSize) {
         throw std::out_of_range("Invalid index for release");
     }
@@ -32,11 +35,13 @@ size_t MegaDataPool::size() const {
 }
 
 size_t MegaDataPool::usedSize() const {
-    size_t count = 0;
-    for (bool flag : used) {
-        if (flag) {
-            ++count;
-        }
+    std::lock_guard<std::mutex> lock(poolMutex);
+    return std::count_if(used.begin(), used.end(), [](bool flag) { return flag; });
+}
+
+void MegaDataPool::resetAll() {
+    std::lock_guard<std::mutex> lock(poolMutex);
+    for (auto& data : pool) {
+        data->reset();
     }
-    return count;
 }

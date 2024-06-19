@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <mutex>
 #include "MegaData.hpp"
 
 class MegaDataPool {
@@ -18,4 +19,7 @@ private:
     size_t poolSize;
     std::vector<std::shared_ptr<MegaData>> pool;
     std::vector<bool> used;
+    mutable std::mutex poolMutex;
+
+    void resetAll();
 };
