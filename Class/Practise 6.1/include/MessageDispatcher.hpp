@@ -29,10 +29,12 @@ struct OrangeMessage {
     double value;
 };
 
-// Define the message variant type
 using Message = std::variant<GreenMessage, BlueMessage, OrangeMessage>;
 
-// Dispatcher class
+using GreenMessageCallback = std::function<void(const GreenMessage&)>;
+using BlueMessageCallback = std::function<void(const BlueMessage&)>;
+using OrangeMessageCallback = std::function<void(const OrangeMessage&)>;
+
 class MessageDispatcher {
 public:
     // Singleton instance
@@ -44,11 +46,10 @@ public:
     void publish(const OrangeMessage& message);
 
     // Subscription methods
-    void subscribe(const std::function<void(const GreenMessage&)>& subscriber);
-    void subscribe(const std::function<void(const BlueMessage&)>& subscriber);
-    void subscribe(const std::function<void(const OrangeMessage&)>& subscriber);
+    void subscribe(GreenMessageCallback subscriber);
+    void subscribe(BlueMessageCallback subscriber);
+    void subscribe(OrangeMessageCallback subscriber);
 
-    // Start and stop the dispatcher
     void start();
     void stop();
 

@@ -54,37 +54,31 @@ void MessageDispatcher::publish(const OrangeMessage& message) {
     cv_.notify_all();
 }
 
-void MessageDispatcher::subscribe(const std::function<void(const GreenMessage&)>& subscriber) {
+void MessageDispatcher::subscribe(GreenMessageCallback subscriber) {
     std::lock_guard<std::mutex> lock(mtx_);
-    subscribers_[typeid(GreenMessage).hash_code()].emplace_back(
-        [subscriber](const Message& message) {
-            if (auto ptr = std::get_if<GreenMessage>(&message)) {
-                subscriber(*ptr);
-            }
+    subscribers_[typeid(GreenMessage).hash_code()].emplace_back([subscriber](const Message& message) {
+        if (std::holds_alternative<GreenMessage>(message)) {
+            subscriber(std::get<GreenMessage>(message));
         }
-    );
+    });
 }
 
-void MessageDispatcher::subscribe(const std::function<void(const BlueMessage&)>& subscriber) {
+void MessageDispatcher::subscribe(BlueMessageCallback subscriber) {
     std::lock_guard<std::mutex> lock(mtx_);
-    subscribers_[typeid(BlueMessage).hash_code()].emplace_back(
-        [subscriber](const Message& message) {
-            if (auto ptr = std::get_if<BlueMessage>(&message)) {
-                subscriber(*ptr);
-            }
+    subscribers_[typeid(BlueMessage).hash_code()].emplace_back([subscriber](const Message& message) {
+        if (std::holds_alternative<BlueMessage>(message)) {
+            subscriber(std::get<BlueMessage>(message));
         }
-    );
+    });
 }
 
-void MessageDispatcher::subscribe(const std::function<void(const OrangeMessage&)>& subscriber) {
+void MessageDispatcher::subscribe(OrangeMessageCallback subscriber) {
     std::lock_guard<std::mutex> lock(mtx_);
-    subscribers_[typeid(OrangeMessage).hash_code()].emplace_back(
-        [subscriber](const Message& message) {
-            if (auto ptr = std::get_if<OrangeMessage>(&message)) {
-                subscriber(*ptr);
-            }
+    subscribers_[typeid(OrangeMessage).hash_code()].emplace_back([subscriber](const Message& message) {
+        if (std::holds_alternative<OrangeMessage>(message)) {
+            subscriber(std::get<OrangeMessage>(message));
         }
-    );
+    });
 }
 
 void MessageDispatcher::dispatcherLoop() {
