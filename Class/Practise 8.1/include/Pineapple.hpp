@@ -2,11 +2,10 @@
 
 class Pineapple {
 public:
-    Pineapple(double coefficient, double basePrice)
-        : coefficient_(coefficient), basePrice_(basePrice) {}
+    Pineapple(double coefficient, double basePrice);
 
-    double getCoefficient() const { return coefficient_; }
-    double getBasePrice() const { return basePrice_; }
+    double getCoefficient() const;
+    double getBasePrice() const;
 
 private:
     double coefficient_;

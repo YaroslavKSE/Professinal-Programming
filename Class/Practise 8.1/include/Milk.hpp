@@ -2,11 +2,10 @@
 
 class Milk {
 public:
-    Milk(double coefficient, double basePrice)
-        : coefficient_(coefficient), basePrice_(basePrice) {}
+    Milk(double coefficient, double basePrice);
 
-    double getCoefficient() const { return coefficient_; }
-    double getBasePrice() const { return basePrice_; }
+    double getCoefficient() const;
+    double getBasePrice() const;
 
 private:
     double coefficient_;
