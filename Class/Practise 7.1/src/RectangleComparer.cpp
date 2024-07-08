@@ -1,20 +1,27 @@
 #include "RectangleComparer.hpp"
 #include <algorithm>
+#include <numeric>
 #include <print>
 
-Rectangle RectangleComparer::getRectangleWithMaxArea(const std::vector<Rectangle>& rectangles) {
+Rectangle RectangleComparer::getRectangleWithMaxArea(const RectangleList& rectangles) {
+    if (rectangles.empty()) {
+        throw std::runtime_error("Empty rectangle list");
+    }
     return *std::max_element(rectangles.begin(), rectangles.end(), [](const Rectangle& a, const Rectangle& b) {
         return a.getArea() < b.getArea();
     });
 }
 
-Rectangle RectangleComparer::getRectangleWithMinArea(const std::vector<Rectangle>& rectangles) {
+Rectangle RectangleComparer::getRectangleWithMinArea(const RectangleList& rectangles) {
+    if (rectangles.empty()) {
+        throw std::runtime_error("Empty rectangle list");
+    }
     return *std::min_element(rectangles.begin(), rectangles.end(), [](const Rectangle& a, const Rectangle& b) {
         return a.getArea() < b.getArea();
     });
 }
 
-void RectangleComparer::printPlacementPossibilities(const std::vector<Rectangle>& rectangles) {
+void RectangleComparer::printPlacementPossibilities(const RectangleList& rectangles) {
     for (size_t i = 0; i < rectangles.size(); ++i) {
         for (size_t j = 0; j < rectangles.size(); ++j) {
             if (i != j && rectangles[i].canBePlacedInside(rectangles[j])) {
@@ -24,15 +31,12 @@ void RectangleComparer::printPlacementPossibilities(const std::vector<Rectangle>
     }
 }
 
-double RectangleComparer::getTotalArea(const std::vector<Rectangle>& rectangles) {
-    double totalArea = 0;
-    for (const auto& rect : rectangles) {
-        totalArea += rect.getArea();
-    }
-    return totalArea;
+double RectangleComparer::getTotalArea(const RectangleList& rectangles) {
+    return std::accumulate(rectangles.begin(), rectangles.end(), 0.0, 
+        [](double sum, const Rectangle& rect) { return sum + rect.getArea(); });
 }
 
-void RectangleComparer::printBiggerSides(const std::vector<Rectangle>& rectangles) {
+void RectangleComparer::printBiggerSides(const RectangleList& rectangles) {
     for (size_t i = 0; i < rectangles.size(); ++i) {
         std::println("The biggest side of rectangle {}: {}", i + 1, rectangles[i].getBiggerSide());
     }

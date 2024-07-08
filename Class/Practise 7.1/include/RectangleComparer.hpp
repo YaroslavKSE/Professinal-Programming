@@ -1,13 +1,14 @@
 #pragma once
-
 #include "Rectangle.hpp"
 #include <vector>
 
+using RectangleList = std::vector<Rectangle>;
+
 class RectangleComparer {
 public:
-    static Rectangle getRectangleWithMaxArea(const std::vector<Rectangle>& rectangles);
-    static Rectangle getRectangleWithMinArea(const std::vector<Rectangle>& rectangles);
-    static void printPlacementPossibilities(const std::vector<Rectangle>& rectangles);
-    static double getTotalArea(const std::vector<Rectangle>& rectangles);
-    static void printBiggerSides(const std::vector<Rectangle>& rectangles);
+    static Rectangle getRectangleWithMaxArea(const RectangleList& rectangles);
+    static Rectangle getRectangleWithMinArea(const RectangleList& rectangles);
+    static void printPlacementPossibilities(const RectangleList& rectangles);
+    static double getTotalArea(const RectangleList& rectangles);
+    static void printBiggerSides(const RectangleList& rectangles);
 };
