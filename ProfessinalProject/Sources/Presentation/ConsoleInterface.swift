@@ -8,6 +8,19 @@ public class ConsoleInterface {
     public init(businessLogic: BusinessLogicFacade) {
         self.businessLogic = businessLogic
     }
+
+        private func displayProducts(_ products: [Product]) {
+        if products.isEmpty {
+            print("No products found.")
+        } else {
+            print("\nFound \(products.count) product(s):")
+            for (index, product) in products.enumerated() {
+                print("\(index + 1). \(product.name) - Category: \(product.category), Size: \(product.size)")
+                print("   Description: \(product.description)")
+                print()
+            }
+        }
+    }
     
     public func start() {
         print("Welcome to our Handmade Clothes Store!")
@@ -94,8 +107,10 @@ public class ConsoleInterface {
         do {
             try businessLogic.registerUser(email: email, password: password)
             print("User registered successfully!")
+        } catch let error as UserError {
+            print("Error registering user: \(error.errorDescription)")
         } catch {
-            print("Error registering user: \(error.localizedDescription)")
+            print("An unexpected error occurred: \(error.localizedDescription)")
         }
     }
     
@@ -115,8 +130,10 @@ public class ConsoleInterface {
         do {
             let user = try businessLogic.loginUser(email: email, password: password)
             print("Welcome, \(user.email)!")
+        } catch let error as UserError {
+            print("Error logging in: \(error.errorDescription)")
         } catch {
-            print("Error logging in: \(error.localizedDescription)")
+            print("An unexpected error occurred: \(error.localizedDescription)")
         }
     }
     
@@ -145,8 +162,10 @@ public class ConsoleInterface {
         do {
             try businessLogic.recoverPassword(email: email)
             print("Password recovery initiated. Please check your email.")
+        } catch let error as UserError {
+            print("Error recovering password: \(error.errorDescription)")
         } catch {
-            print("Error recovering password: \(error.localizedDescription)")
+            print("An unexpected error occurred: \(error.localizedDescription)")
         }
     }
     
@@ -190,10 +209,16 @@ public class ConsoleInterface {
         print("Enter category (or press Enter for all products):")
         let category = readLine() ?? ""
         
-        let products = category.isEmpty ? businessLogic.getAllProducts() : businessLogic.getProductsByCategory(category)
-        displayProducts(products)
+        do {
+            let products = try category.isEmpty ? businessLogic.getAllProducts() : businessLogic.getProductsByCategory(category)
+            displayProducts(products)
+        } catch let error as ProductError {
+            print("Error browsing catalog: \(error.description)")
+        } catch {
+            print("An unexpected error occurred: \(error.localizedDescription)")
+        }
     }
-    
+
     private func filterBySize() {
         print("Enter size:")
         guard let size = readLine(), !size.isEmpty else {
@@ -201,10 +226,16 @@ public class ConsoleInterface {
             return
         }
         
-        let products = businessLogic.getProductsBySize(size)
-        displayProducts(products)
+        do {
+            let products = try businessLogic.getProductsBySize(size)
+            displayProducts(products)
+        } catch let error as ProductError {
+            print("Error filtering by size: \(error.description)")
+        } catch {
+            print("An unexpected error occurred: \(error.localizedDescription)")
+        }
     }
-    
+
     private func searchProducts() {
         print("Enter search keyword:")
         guard let keyword = readLine(), !keyword.isEmpty else {
@@ -212,22 +243,16 @@ public class ConsoleInterface {
             return
         }
         
-        let products = businessLogic.searchProducts(keyword: keyword)
-        displayProducts(products)
-    }
-    
-    private func displayProducts(_ products: [Product]) {
-        if products.isEmpty {
-            print("No products found.")
-        } else {
-            print("\nFound \(products.count) product(s):")
-            for (index, product) in products.enumerated() {
-                print("\(index + 1). \(product.name) - Category: \(product.category), Size: \(product.size)")
-                print("   Description: \(product.description)")
-                print()
-            }
+        do {
+            let products = try businessLogic.searchProducts(keyword: keyword)
+            displayProducts(products)
+        } catch let error as ProductError {
+            print("Error searching products: \(error.description)")
+        } catch {
+            print("An unexpected error occurred: \(error.localizedDescription)")
         }
     }
+
     private func createProduct() {
         print("Enter product name:")
         guard let name = readLine(), !name.isEmpty else {
@@ -261,8 +286,10 @@ public class ConsoleInterface {
             print("Category: \(newProduct.category)")
             print("Size: \(newProduct.size)")
             print("Description: \(newProduct.description)")
+        } catch let error as ProductError {
+            print("Error creating product: \(error.description)")
         } catch {
-            print("Error creating product: \(error.localizedDescription)")
+            print("An unexpected error occurred: \(error.localizedDescription)")
         }
     }
 }

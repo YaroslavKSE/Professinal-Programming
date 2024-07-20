@@ -8,29 +8,58 @@ public class ProductService: ProductServiceProtocol {
         self.productRepository = productRepository
     }
     
-    public func addProduct(name: String, category: String, size: String, description: String) throws {
-        let newProduct = Product(name: name, category: category, size: size, description: description)
-        try productRepository.createProduct(newProduct)
-    }
-    
-    public func getAllProducts() -> [Product] {
-        return productRepository.getAllProducts()
-    }
-    
-    public func getProductsByCategory(_ category: String) -> [Product] {
-        return productRepository.getProductsByCategory(category)
-    }
-    
-    public func getProductsBySize(_ size: String) -> [Product] {
-        return productRepository.getProductsBySize(size)
-    }
-    
-    public func searchProducts(keyword: String) -> [Product] {
-        return productRepository.searchProducts(keyword: keyword)
-    }
     public func createProduct(name: String, category: String, size: String, description: String) throws -> Product {
-    let newProduct = Product(name: name, category: category, size: size, description: description)
-    try productRepository.createProduct(newProduct)
-    return newProduct
+        guard !name.isEmpty && !category.isEmpty && !size.isEmpty && !description.isEmpty else {
+            throw ProductError.invalidInput("All product fields must be non-empty")
+        }
+        
+        let newProduct = Product(name: name, category: category, size: size, description: description)
+        do {
+            try productRepository.createProduct(newProduct)
+            return newProduct
+        } catch {
+            throw ProductError.creationFailed("Failed to save product: \(error.localizedDescription)")
+        }
+    }
+    
+    public func getAllProducts() throws -> [Product] {
+        let products = productRepository.getAllProducts()
+        if products.isEmpty {
+            throw ProductError.productNotFound
+        }
+        return products
+    }
+    
+    public func getProductsByCategory(_ category: String) throws -> [Product] {
+        guard !category.isEmpty else {
+            throw ProductError.invalidInput("Category cannot be empty")
+        }
+        let products = productRepository.getProductsByCategory(category)
+        if products.isEmpty {
+            throw ProductError.productNotFound
+        }
+        return products
+    }
+    
+    public func getProductsBySize(_ size: String) throws -> [Product] {
+        guard !size.isEmpty else {
+            throw ProductError.invalidInput("Size cannot be empty")
+        }
+        let products = productRepository.getProductsBySize(size)
+        if products.isEmpty {
+            throw ProductError.productNotFound
+        }
+        return products
+    }
+    
+    public func searchProducts(keyword: String) throws -> [Product] {
+        guard !keyword.isEmpty else {
+            throw ProductError.invalidInput("Search keyword cannot be empty")
+        }
+        let products = productRepository.searchProducts(keyword: keyword)
+        if products.isEmpty {
+            throw ProductError.productNotFound
+        }
+        return products
     }
 }

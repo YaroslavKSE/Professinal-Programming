@@ -7,6 +7,20 @@ public class BusinessLogicFacade {
     public init(serviceLocator: ServiceLocator = .shared) {
         self.serviceLocator = serviceLocator
     }
+
+        private var userService: UserServiceProtocol {
+        guard let service = serviceLocator.resolve(UserServiceProtocol.self, for: "UserService") else {
+            fatalError("UserService not registered")
+        }
+        return service
+    }
+    
+    private var productService: ProductServiceProtocol {
+        guard let service = serviceLocator.resolve(ProductServiceProtocol.self, for: "ProductService") else {
+            fatalError("ProductService not registered")
+        }
+        return service
+    }
     
     // User Management
     public func registerUser(email: String, password: String) throws {
@@ -26,41 +40,25 @@ public class BusinessLogicFacade {
     }
     
     // Product Catalog
-    public func addProduct(name: String, category: String, size: String, description: String) throws {
-        try productService.addProduct(name: name, category: category, size: size, description: description)
-    }
-    
-    public func getAllProducts() -> [Product] {
-        return productService.getAllProducts()
-    }
-    
-    public func getProductsByCategory(_ category: String) -> [Product] {
-        return productService.getProductsByCategory(category)
-    }
-    
-    public func getProductsBySize(_ size: String) -> [Product] {
-        return productService.getProductsBySize(size)
-    }
-    
-    public func searchProducts(keyword: String) -> [Product] {
-        return productService.searchProducts(keyword: keyword)
-    }
-    
-    private var userService: UserServiceProtocol {
-        guard let service = serviceLocator.resolve(UserServiceProtocol.self, for: "UserService") else {
-            fatalError("UserService not registered")
-        }
-        return service
-    }
-    
-    private var productService: ProductServiceProtocol {
-        guard let service = serviceLocator.resolve(ProductServiceProtocol.self, for: "ProductService") else {
-            fatalError("ProductService not registered")
-        }
-        return service
-    }
     public func createProduct(name: String, category: String, size: String, description: String) throws -> Product {
-    return try productService.createProduct(name: name, category: category, size: size, description: description)
+        return try productService.createProduct(name: name, category: category, size: size, description: description)
     }
+    
+    public func getAllProducts() throws -> [Product] {
+        return try productService.getAllProducts()
+    }
+    
+    public func getProductsByCategory(_ category: String) throws -> [Product] {
+        return try productService.getProductsByCategory(category)
+    }
+    
+    public func getProductsBySize(_ size: String) throws -> [Product] {
+        return try productService.getProductsBySize(size)
+    }
+    
+    public func searchProducts(keyword: String) throws -> [Product] {
+        return try productService.searchProducts(keyword: keyword)
+    }
+    
 
 }

@@ -9,8 +9,8 @@ public class UserService: UserServiceProtocol {
     }
     
     public func registerUser(email: String, password: String) throws {
-        guard !email.isEmpty, !password.isEmpty else {
-            throw UserError.invalidInput
+        guard !email.isEmpty && !password.isEmpty else {
+            throw UserError.invalidInput("Email and password cannot be empty")
         }
         
         if userRepository.getUserByEmail(email) != nil {
@@ -35,7 +35,7 @@ public class UserService: UserServiceProtocol {
     
     public func registerUserWithSocialMedia(socialMediaAccount: String) throws {
         guard !socialMediaAccount.isEmpty else {
-            throw UserError.invalidInput
+            throw UserError.invalidInput("Social media account cannot be empty")
         }
         
         if userRepository.getUserBySocialMediaAccount(socialMediaAccount) != nil {
@@ -51,16 +51,8 @@ public class UserService: UserServiceProtocol {
             throw UserError.userNotFound
         }
         
-        // In a real application, generate a password reset token and send an email here
+        // In a real application, would generate a password reset token and send an email here
         // For this console application, just print the password
         print("Password recovery for \(email): Your password is \(user.password)")
     }
-}
-
-enum UserError: Error {
-    case invalidInput
-    case emailAlreadyExists
-    case userNotFound
-    case invalidCredentials
-    case socialMediaAccountAlreadyExists
 }
