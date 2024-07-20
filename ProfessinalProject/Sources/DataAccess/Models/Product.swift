@@ -1,14 +1,14 @@
 import Foundation
-import SwiftData
 
-@Model
-final class Product {
-    let name: String
-    let category: String
-    let size: String
-    let description: String
+public struct Product: Codable {
+    public let id: UUID
+    public let name: String
+    public let category: String
+    public let size: String
+    public let description: String
     
-    init(name: String, category: String, size: String, description: String) {
+    public init(id: UUID = UUID(), name: String, category: String, size: String, description: String) {
+        self.id = id
         self.name = name
         self.category = category
         self.size = size

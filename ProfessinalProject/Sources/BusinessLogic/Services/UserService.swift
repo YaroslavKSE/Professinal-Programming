@@ -8,7 +8,7 @@ public class UserService: UserServiceProtocol {
         self.userRepository = userRepository
     }
     
-    func registerUser(email: String, password: String) throws {
+    public func registerUser(email: String, password: String) throws {
         guard !email.isEmpty, !password.isEmpty else {
             throw UserError.invalidInput
         }
@@ -21,7 +21,7 @@ public class UserService: UserServiceProtocol {
         try userRepository.createUser(newUser)
     }
     
-    func loginUser(email: String, password: String) throws -> User {
+    public func loginUser(email: String, password: String) throws -> User {
         guard let user = userRepository.getUserByEmail(email) else {
             throw UserError.userNotFound
         }
@@ -33,7 +33,7 @@ public class UserService: UserServiceProtocol {
         return user
     }
     
-    func registerUserWithSocialMedia(socialMediaAccount: String) throws {
+    public func registerUserWithSocialMedia(socialMediaAccount: String) throws {
         guard !socialMediaAccount.isEmpty else {
             throw UserError.invalidInput
         }
@@ -46,7 +46,7 @@ public class UserService: UserServiceProtocol {
         try userRepository.createUser(newUser)
     }
     
-    func recoverPassword(email: String) throws {
+    public func recoverPassword(email: String) throws {
         guard let user = userRepository.getUserByEmail(email) else {
             throw UserError.userNotFound
         }

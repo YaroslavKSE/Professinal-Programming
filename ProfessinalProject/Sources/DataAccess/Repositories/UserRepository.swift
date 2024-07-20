@@ -1,36 +1,71 @@
 import Foundation
-import SwiftData
 
-protocol UserRepository {
+public protocol UserRepository {
     func createUser(_ user: User) throws
     func getUserByEmail(_ email: String) -> User?
     func updateUser(_ user: User) throws
     func getUserBySocialMediaAccount(_ account: String) -> User?
 }
 
-class SwiftDataUserRepository: UserRepository {
-    private let context: ModelContext
+public class FileUserRepository: UserRepository {
+    private let fileManager = FileManager.default
+    private let usersFolderURL: URL
     
-    init(context: ModelContext) {
-        self.context = context
+    public init() throws {
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        usersFolderURL = documentsURL.appendingPathComponent("users", isDirectory: true)
+        try fileManager.createDirectory(at: usersFolderURL, withIntermediateDirectories: true, attributes: nil)
     }
     
-    func createUser(_ user: User) throws {
-        context.insert(user)
-        try context.save()
+    private func fileURL(for userId: UUID) -> URL {
+        return usersFolderURL.appendingPathComponent("\(userId.uuidString).json")
     }
     
-    func getUserByEmail(_ email: String) -> User? {
-        let descriptor = FetchDescriptor<User>(predicate: #Predicate { $0.email == email })
-        return try? context.fetch(descriptor).first
+    public func createUser(_ user: User) throws {
+        let data = try JSONEncoder().encode(user)
+        try data.write(to: fileURL(for: user.id))
     }
     
-    func updateUser(_ user: User) throws {
-        try context.save()
+    public func getUserByEmail(_ email: String) -> User? {
+        guard let enumerator = fileManager.enumerator(at: usersFolderURL, includingPropertiesForKeys: nil) else {
+            return nil
+        }
+        
+        for case let fileURL as URL in enumerator where fileURL.pathExtension == "json" {
+            guard let data = try? Data(contentsOf: fileURL),
+                  let user = try? JSONDecoder().decode(User.self, from: data) else {
+                continue
+            }
+            
+            if user.email == email {
+                return user
+            }
+        }
+        
+        return nil
     }
     
-    func getUserBySocialMediaAccount(_ account: String) -> User? {
-        let descriptor = FetchDescriptor<User>(predicate: #Predicate { $0.socialMediaAccount == account })
-        return try? context.fetch(descriptor).first
+    public func updateUser(_ user: User) throws {
+        let data = try JSONEncoder().encode(user)
+        try data.write(to: fileURL(for: user.id))
+    }
+    
+    public func getUserBySocialMediaAccount(_ account: String) -> User? {
+        guard let enumerator = fileManager.enumerator(at: usersFolderURL, includingPropertiesForKeys: nil) else {
+            return nil
+        }
+        
+        for case let fileURL as URL in enumerator where fileURL.pathExtension == "json" {
+            guard let data = try? Data(contentsOf: fileURL),
+                  let user = try? JSONDecoder().decode(User.self, from: data) else {
+                continue
+            }
+            
+            if user.socialMediaAccount == account {
+                return user
+            }
+        }
+        
+        return nil
     }
 }

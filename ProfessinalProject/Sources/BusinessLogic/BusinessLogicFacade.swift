@@ -59,4 +59,8 @@ public class BusinessLogicFacade {
         }
         return service
     }
+    public func createProduct(name: String, category: String, size: String, description: String) throws -> Product {
+    return try productService.createProduct(name: name, category: category, size: size, description: description)
+    }
+
 }

@@ -167,6 +167,8 @@ public class ConsoleInterface {
             case 3:
                 searchProducts()
             case 4:
+                createProduct()
+            case 5:
                 return
             default:
                 print("Invalid option. Please try again.")
@@ -179,8 +181,9 @@ public class ConsoleInterface {
         print("1. Browse catalog")
         print("2. Filter by size")
         print("3. Search products")
-        print("4. Back to main menu")
-        print("Please enter your choice (1-4):")
+        print("4. Create new product")
+        print("5. Back to main menu")
+        print("Please enter your choice (1-5):")
     }
     
     private func browseCatalog() {
@@ -223,6 +226,43 @@ public class ConsoleInterface {
                 print("   Description: \(product.description)")
                 print()
             }
+        }
+    }
+    private func createProduct() {
+        print("Enter product name:")
+        guard let name = readLine(), !name.isEmpty else {
+            print("Invalid name.")
+            return
+        }
+
+        print("Enter product category:")
+        guard let category = readLine(), !category.isEmpty else {
+            print("Invalid category.")
+            return
+        }
+
+        print("Enter product size:")
+        guard let size = readLine(), !size.isEmpty else {
+            print("Invalid size.")
+            return
+        }
+
+        print("Enter product description:")
+        guard let description = readLine(), !description.isEmpty else {
+            print("Invalid description.")
+            return
+        }
+
+        do {
+            let newProduct = try businessLogic.createProduct(name: name, category: category, size: size, description: description)
+            print("Product created successfully!")
+            print("New product details:")
+            print("Name: \(newProduct.name)")
+            print("Category: \(newProduct.category)")
+            print("Size: \(newProduct.size)")
+            print("Description: \(newProduct.description)")
+        } catch {
+            print("Error creating product: \(error.localizedDescription)")
         }
     }
 }

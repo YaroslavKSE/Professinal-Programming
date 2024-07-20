@@ -8,24 +8,29 @@ public class ProductService: ProductServiceProtocol {
         self.productRepository = productRepository
     }
     
-    func addProduct(name: String, category: String, size: String, description: String) throws {
+    public func addProduct(name: String, category: String, size: String, description: String) throws {
         let newProduct = Product(name: name, category: category, size: size, description: description)
         try productRepository.createProduct(newProduct)
     }
     
-    func getAllProducts() -> [Product] {
+    public func getAllProducts() -> [Product] {
         return productRepository.getAllProducts()
     }
     
-    func getProductsByCategory(_ category: String) -> [Product] {
+    public func getProductsByCategory(_ category: String) -> [Product] {
         return productRepository.getProductsByCategory(category)
     }
     
-    func getProductsBySize(_ size: String) -> [Product] {
+    public func getProductsBySize(_ size: String) -> [Product] {
         return productRepository.getProductsBySize(size)
     }
     
-    func searchProducts(keyword: String) -> [Product] {
+    public func searchProducts(keyword: String) -> [Product] {
         return productRepository.searchProducts(keyword: keyword)
+    }
+    public func createProduct(name: String, category: String, size: String, description: String) throws -> Product {
+    let newProduct = Product(name: name, category: category, size: size, description: description)
+    try productRepository.createProduct(newProduct)
+    return newProduct
     }
 }

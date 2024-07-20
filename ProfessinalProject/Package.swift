@@ -5,7 +5,6 @@ import PackageDescription
 
 let package = Package(
     name: "ProfessinalProject",
-    platforms: [.macOS(.v14)], // SwiftData requires macOS 14 (Sonoma) or later
     dependencies: [
         .package(url: "https://github.com/apple/swift-collections.git", from: "1.0.0")
     ],

@@ -1,13 +1,13 @@
 import Foundation
-import SwiftData
 
-@Model
-final class User {
-    @Attribute(.unique) let email: String
-    var password: String
-    let socialMediaAccount: String?
+public struct User: Codable {
+    public let id: UUID
+    public let email: String
+    public var password: String
+    public let socialMediaAccount: String?
     
-    init(email: String, password: String, socialMediaAccount: String? = nil) {
+    public init(id: UUID = UUID(), email: String, password: String, socialMediaAccount: String? = nil) {
+        self.id = id
         self.email = email
         self.password = password
         self.socialMediaAccount = socialMediaAccount

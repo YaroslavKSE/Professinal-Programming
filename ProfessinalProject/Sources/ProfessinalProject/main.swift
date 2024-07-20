@@ -1,33 +1,25 @@
 import Foundation
-import SwiftData
 import BusinessLogic
 import DataAccess
 import Presentation
 
-// Set up the ModelContainer
-let schema = Schema([
-    User.self,
-    Product.self
-])
-
-let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
 do {
-    let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-    let context = ModelContext(container)
-    
-    let userRepository = SwiftDataUserRepository(context: context)
-    let productRepository = SwiftDataProductRepository(context: context)
+    // Initialize repositories
+    let userRepository = try FileUserRepository()
+    let productRepository = try FileProductRepository()
 
+    // Initialize services
     let userService = UserService(userRepository: userRepository)
     let productService = ProductService(productRepository: productRepository)
 
+    // Initialize BusinessLogicFacade
+    let businessLogicFacade = BusinessLogicFacade()
+    
+    // Register services with ServiceLocator
     ServiceLocator.shared.register(userService, for: "UserService")
     ServiceLocator.shared.register(productService, for: "ProductService")
 
-    let businessLogicFacade = BusinessLogicFacade()
-    
-    // Create and start the console interface
+    // Initialize and start the console interface
     let consoleInterface = ConsoleInterface(businessLogic: businessLogicFacade)
     consoleInterface.start()
     
